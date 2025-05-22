@@ -10,7 +10,7 @@ import loginRoutes from "./src/routes/login.js";
 import logoutRoutes from "./src/routes/logout.js";
 import registerClientRoutes from "./src/routes/registerClients.js";
 import recoveryPasswordRoutes from "./src/routes/recoveryPassword.js";
-
+import { validateAuthToken } from "./src/middlewares/validateAuthToken.js";
 // Creo una constante que es igual a la libreria que importé
 const app = express();
 
@@ -20,12 +20,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Definir las rutas de las funciones que tendrá la página web
-app.use("/api/products", productsRoutes);
+app.use("/api/products", validateAuthToken(["admin", "employee"]),productsRoutes);
 app.use("/api/customers", customersRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/branches", branchesRoutes);
 
-app.use("/api/registerEmployees", registerEmployessRoutes);
+app.use("/api/registerEmployees", validateAuthToken(["admin"]), registerEmployessRoutes);
 app.use("/api/login", loginRoutes);
 app.use("/api/logout", logoutRoutes);
 
